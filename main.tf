@@ -145,13 +145,21 @@ resource "aws_lambda_layer_version" "name" {
   compatible_runtimes = ["nodejs16.x"]
 }
 
+resource "aws_lambda_alias" "test_alias" {
+  name             = "testalias"
+  description      = "a sample description"
+  function_name    = aws_lambda_function.test_lambda.function_name
+  function_version = "$LATEST"
+}
+
 resource "aws_lambda_permission" "allow_s3_permission" {
   statement_id  = "Allows3Excecution"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.test_lambda.function_name
   principal     = "s3.amazonaws.com"
-  source_arn    = "arn:aws:s3:::lambda-new-image-bucket"
-  /* source_arn = aws_s3_bucket.image_object.arn */
+  /* source_arn    = "arn:aws:s3:::lambda-new-image-bucket" */
+  source_arn = aws_s3_bucket.image_object.arn
+  /* qualifier     = aws_lambda_alias.test_alias.name */
 }
 
 
@@ -162,7 +170,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.test_lambda.arn
-    events              = ["s3:ObjectCreated:*"]
+    events              = ["s3:ObjectCreated:Put"]
   }
 
 }
