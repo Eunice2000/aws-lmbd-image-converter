@@ -1,6 +1,3 @@
-Sure! Here's a sample README file for provisioning a serverless image using Terraform, Lambda, and Node.js, with an S3 integration:
-
----
 
 # Serverless Image Provisioning with Terraform, Lambda, and S3
 
